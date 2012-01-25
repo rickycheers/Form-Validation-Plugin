@@ -28,6 +28,8 @@ var FormValidator = (function(jQuery){
 
 		this.form.submit(function(e){
 			e.preventDefault();
+			//remove later
+			$('input.error').val('');
 			validateForm.call(self);
 		});
 
@@ -111,12 +113,14 @@ var FormValidator = (function(jQuery){
 			if(error_messages.length > 0){
 				var j = 0;
 				var error_message = '<ul class="error_message">';
+				/*
 				do{
 					error_message += "\n\t<li>"+error_messages[j]+"</li>";
 					j += 1;
 				} while(j < error_messages.length)
-				/*
-				error_message += "\n</ul>"
+
+				error_message += "\n</ul>";
+
 				$(input).next('.error_message').remove();
 				$(input).after(error_message);
 				$('.error_message').animate({
@@ -124,7 +128,10 @@ var FormValidator = (function(jQuery){
 					top: ['-65px', 'swing']
 					}, 550);
 				*/
-				$(input).addClass('error');
+				$(input).addClass('error').val(error_messages[0]).bind('click', function(){
+					this.select();
+					$(this).removeClass('error');
+				});
 			} else {
 				//$(input).next('.error_message').remove();
 				$(input).removeClass('error');
@@ -193,7 +200,7 @@ var FormValidator = (function(jQuery){
 	function getErrorMessage(key, rule_val) {
 		/** TODO make messages an object property and make it extendable when instantiating the object.*/
 		var messages = {
-			required: 'This field is required.',
+			required: 'Required field',
 			minlength: 'The minimum length must be ' + rule_val,
 			maxlength: 'The maximum length  must be ' + rule_val,
 			min: 'The minium value must be ' + rule_val,
