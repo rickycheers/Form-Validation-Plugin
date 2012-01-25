@@ -1,6 +1,6 @@
 ul.error_message li{
 	list-style: none;
-	font-size: 12px;
+	font-size: 11px;
 	color: white;
 	font-family: Futura Arial, Helvetica, sans-serif;
 }
@@ -9,11 +9,11 @@ obscuro a50000
 claro ee2828
 */
 ul.error_message {
-	max-width: 225px;
-	height: 30px;
+	max-width: 120px;
+	height: 14px;
 	position: absolute;
 	z-index: 50;
-	top: -70px;
+	top: -60px;
 	opacity: 0;
 
 	position:relative;
@@ -46,3 +46,9 @@ ul.error_message:after {
     width:0;
 }
 
+.error {
+	border: 1px solid #ee2828;
+	-webkit-box-shadow: 1px 0px 10px #ee2828;
+	-moz-box-shadow:    1px 0px 10px #ee2828;
+	box-shadow:         1px 0px 10px #ee2828;
+}

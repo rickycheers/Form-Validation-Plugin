@@ -115,15 +115,19 @@ var FormValidator = (function(jQuery){
 					error_message += "\n\t<li>"+error_messages[j]+"</li>";
 					j += 1;
 				} while(j < error_messages.length)
+				/*
 				error_message += "\n</ul>"
 				$(input).next('.error_message').remove();
 				$(input).after(error_message);
 				$('.error_message').animate({
 					opacity: [1, 'linear'],
-					top: ['-80px', 'swing']
+					top: ['-65px', 'swing']
 					}, 550);
+				*/
+				$(input).addClass('error');
 			} else {
-				$(input).next('.error_message').remove();
+				//$(input).next('.error_message').remove();
+				$(input).removeClass('error');
 			}
 		}
 	}
@@ -203,4 +207,4 @@ var FormValidator = (function(jQuery){
 
 })(jQuery);
 
-//new FormValidator('#myForm');
+new FormValidator('#myForm');
