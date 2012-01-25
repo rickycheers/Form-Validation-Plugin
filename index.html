@@ -1,0 +1,31 @@
+<!Doctype html>
+	<head>
+		<meta charset="utf-8">
+		<title>Form Validator Plugin</title>
+		<link rel="stylesheet" href="style.css" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script src="formvalidator.js" type="text/javascript" charset="utf-8" async defer></script>
+		<!-- <script src="formvalidator-min.js" type="text/javascript" charset="utf-8" async defer></script> -->
+	</head>
+	<body>
+		<form id="myForm" type="GET" action="#">
+
+			<label for="myForm_firstname">First Name</label>
+			<input id="myForm_firstname" name="firstname" type="text" placeholder="First Name" value="" data-rules="minlength: 3" required/>
+
+			<label for="myForm_lastname">Last Name</label>
+			<input id="myForm_lastname" name="lastname" type="text" placeholder="Last Name" value="" data-rules="minlength: 3" required/>
+
+			<label for="myForm_email">Email</label>
+			<input id="myForm_email" name="email" type="email" placeholder="Email" value="" required/>
+
+			<label for="myForm_phone">Phone</label>
+			<input id="myForm_phone" name="phone" type="number" placeholder="Phone" value="" data-rules="minlength:10" maxlength="10" required/>
+
+			<label for="myForm_sometext">Some Text</label>
+			<input id="myForm_sometext" name="sometext" type="text" placeholder="Some Text" value=""/>
+
+			<button>Submit</button>
+		</form>
+	</body>
+</html>
