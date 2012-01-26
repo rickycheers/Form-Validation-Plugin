@@ -144,6 +144,7 @@ var FormValidator = (function(jQuery){
 
 				$(input).one('click', function() {
 					var inp = $(this);
+					inp.removeClass('error');
 					if (inp.attr('data-value').length > 0 ){
 						inp.val( inp.attr('data-value') );
 					} else {
