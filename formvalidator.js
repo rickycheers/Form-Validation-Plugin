@@ -2,16 +2,23 @@ var FormValidator = (function(jQuery){
 	
 	var $ = jQuery;
 
-	var self = FormValidator = function(form_id) {
+	/**
+	 * A class that validates a HTML form.
+	 * 
+	 * @param form_id String
+	 * @param callback Function
+	 */
+	var self = FormValidator = function(form_id, callback) {
 		if (!form_id || form_id.match('#').length === 0){
 			throw Error("Sorry, I need a valid ID like: \"#someId\" and you gave me: " + form_id);
 		}
 
 		var self = this;
+		this.isValidForm = null;
 		this.model = [];
 		this.form = $(form_id);
 
-		this.form.attr('novalidate','');
+		this.form.attr('novalidate', '');
 
 		if (this.form.length === 0){
 			throw Error("Sorry, I can't find any element with the ID \""+form_id+"\" ");
@@ -28,7 +35,9 @@ var FormValidator = (function(jQuery){
 
 		this.form.submit(function(e){
 			e.preventDefault();
-			//remove latter
+			var form = $(this);
+
+			//move latter
 			$('input.error').each(function(){
 				var val = $(this).val();
 				if (val.match(/Required field|The minimum length must be \d|The maximum length must be \d|The minimum value must be \d|The maximum value must be \d|Please type a valid email/)){
@@ -37,6 +46,21 @@ var FormValidator = (function(jQuery){
 			});
 
 			validateForm.call(self);
+
+			if (self.isValidForm) {
+
+				$.ajax({
+					url: form.attr('action'),
+					type: form.attr('method'),
+					success: function(data) { console.log(data); },
+					error: function(data) { console.log(data); }
+				});
+
+				if(typeof callback === 'function'){
+					callback();
+				}
+
+			}
 		});
 
 	};
@@ -113,8 +137,8 @@ var FormValidator = (function(jQuery){
 	}
 
 	function validateForm() {
+		var errorsInForm = 0;
 		for(var i = 0, length = this.form_inputs.length; i < length; i++) {
-
 			var input = this.form_inputs[i];
 			var value = input.value;
 			var error_messages = validateInput.call(this, input, value);
@@ -124,6 +148,7 @@ var FormValidator = (function(jQuery){
 			if(error_messages.length > 0){
 				var j = 0;
 				var error_message = '<ul class="error_message">';
+				errorsInForm += 1;
 				/*
 				do{
 					error_message += "\n\t<li>"+error_messages[j]+"</li>";
@@ -151,12 +176,14 @@ var FormValidator = (function(jQuery){
 						inp.val('');
 					}
 				});
-				
 			} else {
 				//$(input).next('.error_message').remove();
 				$(input).removeClass('error');
 			}
 		}
+
+		this.isValidForm = errorsInForm > 0 ? false : true;
+		return error_messages;
 	}
 
 	function validateInput(input, value) {
@@ -238,5 +265,3 @@ var FormValidator = (function(jQuery){
 	return FormValidator;
 
 })(jQuery);
-
-new FormValidator('#myForm');
