@@ -168,7 +168,7 @@ var FormValidator = (function(jQuery){
 		if (rules) {
 			for (var key in rules){
 				if(key.toString() !== 'has_rules'){
-					validate = 'validate' + key[0].toUpperCase() + key.substr(1) + '.call(this, input, value, rules[key])';
+					validate = 'validate' + key.charAt(0).toUpperCase() + key.substr(1) + '.call(this, input, value, rules[key])';
 					
 					try{
 						isValid = eval(validate);
