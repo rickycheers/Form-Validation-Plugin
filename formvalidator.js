@@ -28,8 +28,14 @@ var FormValidator = (function(jQuery){
 
 		this.form.submit(function(e){
 			e.preventDefault();
-			//remove later
-			$('input.error').val('');
+			//remove latter
+			$('input.error').each(function(){
+				var val = $(this).val();
+				if (val.match(/Required field|The minimum length must be \d|The maximum length must be \d|The minimum value must be \d|The maximum value must be \d/)){
+					$(this).val($(this).attr('data-value'));		
+				}
+			});
+
 			validateForm.call(self);
 		});
 
@@ -88,6 +94,11 @@ var FormValidator = (function(jQuery){
 			rules.maxlength = input.attr('maxlength');
 			rules.has_rules = true;
 		}
+		if ( input.attr('type') === 'email') {
+			rules.email = true;
+			rules.has_rules = true;
+		}
+
 		return rules;
 	}
 
@@ -128,10 +139,18 @@ var FormValidator = (function(jQuery){
 					top: ['-65px', 'swing']
 					}, 550);
 				*/
-				$(input).addClass('error').val(error_messages[0]).bind('click', function(){
-					this.select();
-					$(this).removeClass('error');
+				$(input).attr('data-value', $(input).val());
+				$(input).addClass('error').val(error_messages[0]);
+
+				$(input).one('click', function() {
+					var inp = $(this);
+					if (inp.attr('data-value').length > 0 ){
+						inp.val( inp.attr('data-value') );
+					} else {
+						inp.val('');
+					}
 				});
+				
 			} else {
 				//$(input).next('.error_message').remove();
 				$(input).removeClass('error');
@@ -197,14 +216,18 @@ var FormValidator = (function(jQuery){
 		return value <= rule_value;
 	}
 
+	function validateEmail(input, value, rule_value) {
+		return value.match(/([\w-\.]+)@((?:[\w]+\.)+)([a-zA-Z]{2,4})/) ? true : false;
+	}
+
 	function getErrorMessage(key, rule_val) {
 		/** TODO make messages an object property and make it extendable when instantiating the object.*/
 		var messages = {
 			required: 'Required field',
 			minlength: 'The minimum length must be ' + rule_val,
 			maxlength: 'The maximum length  must be ' + rule_val,
-			min: 'The minium value must be ' + rule_val,
-			max: 'The maxium value must be ' + rule_val
+			min: 'The minimum value must be ' + rule_val,
+			max: 'The maximum value must be ' + rule_val
 		}
 		return messages[key];
 	}
