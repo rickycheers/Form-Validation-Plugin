@@ -31,7 +31,7 @@ var FormValidator = (function(jQuery){
 			//remove latter
 			$('input.error').each(function(){
 				var val = $(this).val();
-				if (val.match(/Required field|The minimum length must be \d|The maximum length must be \d|The minimum value must be \d|The maximum value must be \d/)){
+				if (val.match(/Required field|The minimum length must be \d|The maximum length must be \d|The minimum value must be \d|The maximum value must be \d|Please type a valid email/)){
 					$(this).val($(this).attr('data-value'));		
 				}
 			});
@@ -227,7 +227,8 @@ var FormValidator = (function(jQuery){
 			minlength: 'The minimum length must be ' + rule_val,
 			maxlength: 'The maximum length  must be ' + rule_val,
 			min: 'The minimum value must be ' + rule_val,
-			max: 'The maximum value must be ' + rule_val
+			max: 'The maximum value must be ' + rule_val,
+			email: 'Please type a valid email'
 		}
 		return messages[key];
 	}
