@@ -25,7 +25,8 @@ var FormValidator = (function(jQuery){
 		}
 
 		var i;
-		this.form_inputs = this.form.children('input');
+		this.form_inputs = this.form.children('input, textarea');
+		console.log(this.form_inputs);
 		var children_length = this.form_inputs.length;
 		for (i = 0; i < children_length; i++){
 			parseValidationRules.call(this, this.form_inputs[i]);
@@ -48,17 +49,20 @@ var FormValidator = (function(jQuery){
 			validateForm.call(self);
 
 			if (self.isValidForm) {
+				var data = {}; 
+				var successCallback = typeof callback === 'function' ? callback : function(response){ console.log(response); };
 
+				form.children('input, textarea').each(function(){
+					data[$(this).attr('name')] = $(this).val();
+				});
+				
 				$.ajax({
 					url: form.attr('action'),
 					type: form.attr('method'),
-					success: function(data) { console.log(data); },
-					error: function(data) { console.log(data); }
+					data: data,
+					success: function(response) { console.log(response); },
+					error: function(response) { console.log(response); }
 				});
-
-				if(typeof callback === 'function'){
-					callback();
-				}
 
 			}
 		});
