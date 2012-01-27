@@ -8,7 +8,7 @@ var FormValidator = (function(jQuery){
 	 * @param form_id String
 	 * @param callback Function
 	 */
-	var self = FormValidator = function(form_id, callback) {
+	var self = FormValidator = function(form_id, success_callback, error_callback) {
 		if (!form_id || form_id.match('#').length === 0){
 			throw Error("Sorry, I need a valid ID like: \"#someId\" and you gave me: " + form_id);
 		}
@@ -49,7 +49,8 @@ var FormValidator = (function(jQuery){
 
 			if (self.isValidForm) {
 				var data = {}; 
-				var successCallback = typeof callback === 'function' ? callback : function(response){ console.log(response); };
+				var successCallback = typeof success_callback === 'function' ? success_callback : function(response){ console.log(response); };
+				var errorCallback = typeof error_callback === 'function' ? error_callback : function(response){ console.log(response); };
 
 				form.find('input, textarea').each(function(){
 					data[$(this).attr('name')] = $(this).val();
@@ -59,8 +60,8 @@ var FormValidator = (function(jQuery){
 					url: form.attr('action'),
 					type: form.attr('method'),
 					data: data,
-					success: function(response) { console.log(response); },
-					error: function(response) { console.log(response); }
+					success: successCallback,
+					error: errorCallback
 				});
 
 			}
