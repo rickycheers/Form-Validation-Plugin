@@ -20,13 +20,12 @@ var FormValidator = (function(jQuery){
 
 		this.form.attr('novalidate', '');
 
-		if (this.form.length === 0){
+		if (this.form.length === 0) {
 			throw Error("Sorry, I can't find any element with the ID \""+form_id+"\" ");
 		}
 
 		var i;
-		this.form_inputs = this.form.children('input, textarea');
-		console.log(this.form_inputs);
+		this.form_inputs = this.form.find('input, textarea');
 		var children_length = this.form_inputs.length;
 		for (i = 0; i < children_length; i++){
 			parseValidationRules.call(this, this.form_inputs[i]);
@@ -52,7 +51,7 @@ var FormValidator = (function(jQuery){
 				var data = {}; 
 				var successCallback = typeof callback === 'function' ? callback : function(response){ console.log(response); };
 
-				form.children('input, textarea').each(function(){
+				form.find('input, textarea').each(function(){
 					data[$(this).attr('name')] = $(this).val();
 				});
 				
