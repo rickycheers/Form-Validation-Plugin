@@ -266,7 +266,7 @@ var FormValidator = (function(jQuery){
 	}
 
 	function validateEmail(input, value, rule_value) {
-		return value.match(/([\w-\.]+)@((?:[\w]+\.)+)([a-zA-Z]{2,4})/) ? true : false;
+		return value.match(/([\w-\.]+)@((?:([\w]|[\-])+\.)+)([a-zA-Z]{2,4})/) ? true : false;
 	}
 
 	function getErrorMessage(key, rule_val) {
