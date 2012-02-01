@@ -52,9 +52,26 @@ var FormValidator = (function(jQuery){
 				var successCallback = typeof success_callback === 'function' ? success_callback : function(response){ console.log(response); };
 				var errorCallback = typeof error_callback === 'function' ? error_callback : function(response){ console.log(response); };
 
-				form.find('input, textarea').each(function(){
+				//text fields
+				form.find('input[type=text], input[type=email], input[type=number], input[type=phone], input[type=hidden], textarea').each(function(){
 					data[$(this).attr('name')] = $(this).val();
 				});
+
+				//radio buttons
+				form.find('input[type=radio]:checked').each(function(){
+					data[$(this).attr('name')] = $(this).val();
+				});
+
+				//checkboxes
+				form.find('input[type=checkbox]').each(function(){
+					if($(this).is(':checked')){
+						data[$(this).attr('name')] = 'on'; //on
+					} else {
+						data[$(this).attr('name')] = ''; //off
+					}
+				});
+				
+				/** TODO Implement for selects */
 				
 				$.ajax({
 					url: form.attr('action'),
