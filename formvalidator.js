@@ -300,6 +300,7 @@ var FormValidator = (function(jQuery){
 		  '<input id="captcha_value_value" type="text" name="captcha_value_value" />' +
 		'</div>';
 		
+		$('#captcha').remove();
 		$('body').append(dialog_html);
 
 			$('#captcha').dialog({
