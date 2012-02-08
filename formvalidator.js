@@ -8,7 +8,7 @@ var FormValidator = (function(jQuery){
 	 * @param form_id String
 	 * @param callback Function
 	 */
-	var self = FormValidator = function(form_id, success_callback, error_callback) {
+	var self = FormValidator = function(form_id, success_callback, error_callback, use_captcha) {
 		if (!form_id || form_id.match('#').length === 0){
 			throw Error("Sorry, I need a valid ID like: \"#someId\" and you gave me: " + form_id);
 		}
@@ -48,39 +48,14 @@ var FormValidator = (function(jQuery){
 			validateForm.call(self);
 
 			if (self.isValidForm) {
-				var data = {}; 
-				var successCallback = typeof success_callback === 'function' ? success_callback : function(response){ console.log(response); };
-				var errorCallback = typeof error_callback === 'function' ? error_callback : function(response){ console.log(response); };
-
-				//text fields
-				form.find('input[type=text], input[type=email], input[type=number], input[type=phone], input[type=hidden], textarea').each(function(){
-					data[$(this).attr('name')] = $(this).val();
-				});
-
-				//radio buttons
-				form.find('input[type=radio]:checked').each(function(){
-					data[$(this).attr('name')] = $(this).val();
-				});
-
-				//checkboxes
-				form.find('input[type=checkbox]').each(function(){
-					if($(this).is(':checked')){
-						data[$(this).attr('name')] = 'on'; //on
-					} else {
-						data[$(this).attr('name')] = ''; //off
-					}
-				});
-				
-				/** TODO Implement for selects */
-				
-				$.ajax({
-					url: form.attr('action'),
-					type: form.attr('method'),
-					data: data,
-					success: successCallback,
-					error: errorCallback
-				});
-
+				if(use_captcha){
+					showCaptcha();
+					$(document).bind('validcaptcha', function(){
+						doAjax.call(this, form, success_callback, error_callback);
+					});
+				} else {
+					doAjax.call(this, form, success_callback, error_callback);
+				}
 			}
 		});
 
@@ -280,6 +255,79 @@ var FormValidator = (function(jQuery){
 			email: 'Please type a valid email'
 		}
 		return messages[key];
+	}
+
+	function doAjax(form, success_callback, error_callback){
+		var data = {}; 
+		var successCallback = typeof success_callback === 'function' ? success_callback : function(response){ console.log('success'); };
+		var errorCallback = typeof error_callback === 'function' ? error_callback : function(response){ console.log('error'); };
+
+		//text fields
+		form.find('input[type=text], input[type=email], input[type=number], input[type=phone], input[type=hidden], textarea').each(function(){
+			data[$(this).attr('name')] = $(this).val();
+		});
+
+		//radio buttons
+		form.find('input[type=radio]:checked').each(function(){
+			data[$(this).attr('name')] = $(this).val();
+		});
+
+		//checkboxes
+		form.find('input[type=checkbox]').each(function(){
+			if($(this).is(':checked')){
+				data[$(this).attr('name')] = 'on'; //on
+			} else {
+				data[$(this).attr('name')] = ''; //off
+			}
+		});
+		
+		/** TODO Implement for selects */
+		$.ajax({
+			url: form.attr('action'),
+			type: form.attr('method'),
+			data: data,
+			success: successCallback,
+			error: errorCallback
+		});
+	}
+
+	function showCaptcha(){
+		
+		var dialog_html = 
+		'<div id="captcha">' +
+		  '<span id="captcha_value"></span>' +
+		  '<input id="cvh" type="hidden" name="cvh" />' +
+		  '<input id="captcha_value_value" type="text" name="captcha_value_value" />' +
+		'</div>';
+		
+		$('body').append(dialog_html);
+
+			$('#captcha').dialog({
+					autoOpen: false,
+					title: "Just to verify you are human.",
+					width: "360px",
+					height: "250px",
+					buttons:{
+						'Ok': function(){
+							if( $('#cvh').val() === $('#captcha_value_value').val() ){
+								$('#captcha').dialog('close');
+								$(document).trigger('validcaptcha');
+							} else {
+								alert("The validation code does not match.\n Please try again.");
+								generateCaptchcaValue();
+							}
+						}
+					}
+				});
+
+			generateCaptchcaValue();
+			$('#captcha').dialog('open');
+	}
+
+	function generateCaptchcaValue(){
+		var randomnumber = Math.floor(Math.random() * 10000);
+		$('#cvh').val(randomnumber);
+		$('#captcha_value').html(randomnumber);
 	}
 	//self.prototype.doSomething = function() {};
 
