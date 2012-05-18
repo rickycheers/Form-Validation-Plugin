@@ -1,7 +1,12 @@
 var FormValidator = (function(jQuery){
 	
 	var $ = jQuery;
-
+	
+	console      = console      || {};
+	console.log  = console.log  || function(){};
+	console.info = console.info || function(){};
+	console.warn = console.warn || function(){};
+	
 	/**
 	 * A class that validates a HTML form.
 	 * 
@@ -136,7 +141,7 @@ var FormValidator = (function(jQuery){
 		var errorsInForm = 0;
 		for(var i = 0, length = this.form_inputs.length; i < length; i++) {
 			var input = this.form_inputs[i];
-			var value = input.value;
+			var value = $.trim(input.value);
 			var error_messages = validateInput.call(this, input, value);
 
 			//console.log('Input: ', input, 'has ' + error_messages.length + ' errors.');
@@ -299,13 +304,14 @@ var FormValidator = (function(jQuery){
 		  '<input id="cvh" type="hidden" name="cvh" />' +
 		  '<input id="captcha_value_value" type="text" name="captcha_value_value" />' +
 		'</div>';
-		
+
 		$('#captcha').remove();
 		$('body').append(dialog_html);
-
+		
 			$('#captcha').dialog({
 					autoOpen: false,
 					title: "Just to verify you are human.",
+					closeText: 'x',
 					width: "360px",
 					height: "250px",
 					buttons:{
