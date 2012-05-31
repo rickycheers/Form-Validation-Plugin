@@ -1,3 +1,24 @@
+body{
+	background: #eee;
+}
+
+form{
+	width: 300px;
+	margin: 50px auto;
+	padding: 20px;
+	border: 2px solid #eaeaea;
+	background: #fff;
+}
+
+form label{
+	display: block;
+}
+
+form input, form textarea{
+	width: 100%;
+	margin-bottom: 10px;
+}
+
 ul.error_message li{
 	list-style: none;
 	font-size: 11px;
